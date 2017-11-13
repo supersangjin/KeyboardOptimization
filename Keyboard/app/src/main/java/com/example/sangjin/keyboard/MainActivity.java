@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
                 public void messageReceived(String message) {
                     //this method calls the onProgressUpdate
                     publishProgress(message);
+                    TextView textView = (TextView) findViewById(R.id.editText2);
+                    textView.setText(message);
                 }
             });
             mTcpClient.run();

@@ -6,7 +6,10 @@
     <EditText
         android:id="@+id/textview"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editText2"
+        android:layout_alignBottom="@+id/editText2"
+        android:layout_alignParentTop="true" />
 
     <EditText
         android:id="@+id/editText2"
@@ -15,9 +18,9 @@
         android:layout_marginTop="100dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="   The quick brown fox jumps over a lazy dog"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:text="The quick brown fox jumps over a lazy dog"
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/textview" />
 
     <ImageView
         android:layout_width="fill_parent"
@@ -25,6 +28,7 @@
         android:src="@drawable/keyboard"
         android:scaleType="fitEnd"
         android:layout_below="@+id/editText2"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:id="@+id/imageView" />
 
 </RelativeLayout>
