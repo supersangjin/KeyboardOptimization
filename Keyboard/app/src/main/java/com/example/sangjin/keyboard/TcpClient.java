@@ -2,8 +2,6 @@ package com.example.sangjin.keyboard;
 
 import android.util.Log;
 
-import com.example.sangjin.keyboard.Constants;
-
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -16,7 +14,7 @@ import java.net.Socket;
  */
 public class TcpClient {
 
-    public static final String SERVER_IP = "110.76.91.72"; //your computer IP address
+    public static String serverIp = ""; //your computer IP address
     public static final int SERVER_PORT = 4444;
     // message to send to the server
     private String mServerMessage;
@@ -75,7 +73,7 @@ public class TcpClient {
 
         try {
             //here you must put your computer's IP address.
-            InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
+            InetAddress serverAddr = InetAddress.getByName(serverIp);
 
             Log.e("TCP Client", "C: Connecting...");
 

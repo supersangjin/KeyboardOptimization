@@ -3,7 +3,11 @@ package com.example.sangjin.keyboard;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.BufferedWriter;
@@ -13,6 +17,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,21 +26,57 @@ public class MainActivity extends AppCompatActivity {
     static Socket clientSocket;
     static PrintWriter outToServer;
 
+    ArrayList<String> linesToType = new ArrayList<String>();
+    ArrayList<String> touchedPoints = new ArrayList<String>();
+
+    static int screenWidth = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final Button connectButton = (Button) findViewById(R.id.connectButton);
+        connectButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final EditText ip = (EditText) findViewById(R.id.ip);
+                String serverIp = ip.getText().toString();
+                TcpClient.serverIp = serverIp;
+                new ConnectTask().execute("");
+            }
+        });
+
+        final Button nextTextButton = (Button) findViewById(R.id.nextTextButton);
+        nextTextButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                TextView textView = (TextView) findViewById(R.id.editText2);
+
+                if(linesToType.size() > 0 && touchedPoints.size() > 0) {
+                    final String toSend = createStringToSend(linesToType.remove(0), touchedPoints);
+                    touchedPoints.clear();
+                    if (mTcpClient != null) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mTcpClient.sendMessage(toSend);
+                            }
+                        }).start();
+                    }
+                    if (linesToType.size() == 0) {
+                        textView.setText("");
+                    } else {
+                        textView.setText(linesToType.get(0));
+                    }
+                }
+            }
+        });
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        screenWidth = displayMetrics.widthPixels;
+
         TextView textView = (TextView) findViewById(R.id.textview);
         textView.setText("x , y coordinates");
-
-        /*try {
-            //InetAddress serverAddr = InetAddress.getByName("localhost");
-            clientSocket = new Socket("demos.kaazing.com/echo", 1005);
-            outToServer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream())), true);;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
 
         new ConnectTask().execute("");
     }
@@ -52,19 +93,32 @@ public class MainActivity extends AppCompatActivity {
             TextView textView = (TextView) findViewById(R.id.textview);
             textView.setText(strX + " , " + strY);
 
-            //sends the message to the server
-            if (mTcpClient != null) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String message = x + "," + y;
-                        mTcpClient.sendMessage(message);
-                    }
-                }).start();
-            }
+            double xDim = x / ((double) screenWidth);
+
+            touchedPoints.add(String.format ("%.6f", xDim));
+
             //outToServer.write(5);
         }
         return false;
+    }
+
+    private String createStringToSend(String text, ArrayList<String> touchedPoints) {
+        String toSend = text + "_";
+        int longestArrayList = text.length() > touchedPoints.size() ? text.length() : touchedPoints.size();
+
+        for(int i = 0; i < longestArrayList; i++) {
+            if(i < text.length() && i < touchedPoints.size()) {
+                toSend = toSend + text.charAt(i) + ": " + touchedPoints.get(i) + "_";
+            }
+            else if(i < text.length()) {
+                toSend = toSend + text.charAt(i) + ": " + "?_";
+            }
+            else {
+                toSend = toSend + "?: " + touchedPoints.get(i) + "_";
+            }
+        }
+
+        return toSend;
     }
 
     public class ConnectTask extends AsyncTask<String, String, TcpClient> {
@@ -79,16 +133,18 @@ public class MainActivity extends AppCompatActivity {
                 public void messageReceived(String message) {
                     //this method calls the onProgressUpdate
                     publishProgress(message);
+                    linesToType.add(message);
                     TextView textView = (TextView) findViewById(R.id.editText2);
-                    textView.setText(message);
+                    if(textView.getText().toString().equals("") && linesToType.size() > 0) {
+                        textView.setText(linesToType.get(0));
+                        Button nextTextButton = (Button) findViewById(R.id.nextTextButton);
+                    }
                 }
             });
             mTcpClient.run();
 
             return null;
         }
-
-
 
         @Override
         protected void onProgressUpdate(String... values) {
