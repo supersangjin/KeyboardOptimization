@@ -145,11 +145,11 @@ public class MainActivity extends AppCompatActivity {
                     //this method calls the onProgressUpdate
                     publishProgress(message);
                     linesToType.add(message);
-                    TextView textView = (TextView) findViewById(R.id.editText2);
+                    /*TextView textView = (TextView) findViewById(R.id.editText2);
                     if(textView.getText().toString().equals("") && linesToType.size() > 0) {
                         textView.setText(linesToType.get(0));
                         Button nextTextButton = (Button) findViewById(R.id.nextTextButton);
-                    }
+                    }*/
                 }
             });
             mTcpClient.run();
