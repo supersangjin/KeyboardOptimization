@@ -1,13 +1,16 @@
 package com.example.sangjin.keyboard;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.BufferedWriter;
@@ -43,6 +46,14 @@ public class MainActivity extends AppCompatActivity {
                 String serverIp = ip.getText().toString();
                 TcpClient.serverIp = serverIp;
                 new ConnectTask().execute("");
+
+
+                // Hides keyboard
+                /*LinearLayout mainLayout = (LinearLayout)findViewById(R.id.list_item);
+
+                // Then just use the following:
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);*/
             }
         });
 
@@ -103,18 +114,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String createStringToSend(String text, ArrayList<String> touchedPoints) {
-        String toSend = text + "_";
+        String toSend = "Message," + text + "_";
         int longestArrayList = text.length() > touchedPoints.size() ? text.length() : touchedPoints.size();
 
         for(int i = 0; i < longestArrayList; i++) {
             if(i < text.length() && i < touchedPoints.size()) {
-                toSend = toSend + text.charAt(i) + ": " + touchedPoints.get(i) + "_";
+                toSend = toSend + text.charAt(i) + "," + touchedPoints.get(i) + "_";
             }
             else if(i < text.length()) {
-                toSend = toSend + text.charAt(i) + ": " + "?_";
+                toSend = toSend + text.charAt(i) + "," + "?_";
             }
             else {
-                toSend = toSend + "?: " + touchedPoints.get(i) + "_";
+                toSend = toSend + "?," + touchedPoints.get(i) + "_";
             }
         }
 

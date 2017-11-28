@@ -6,12 +6,6 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
-/**
- * Description
- *
- * @author Catalin Prata
- *         Date: 2/12/13
- */
 public class TcpClient {
 
     public static String serverIp = ""; //your computer IP address

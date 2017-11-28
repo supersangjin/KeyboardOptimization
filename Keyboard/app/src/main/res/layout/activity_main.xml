@@ -9,8 +9,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:text="ip address"
-        android:layout_marginTop="15dp" />
+        android:text=""
+        android:layout_marginTop="15dp"
+        android:hint="ip address" />
 
     <TextView
         android:id="@+id/textview"
