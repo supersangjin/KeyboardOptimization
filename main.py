@@ -2,13 +2,14 @@ import getopt # get input data
 
 
 WIDTH_KEY_DEFAULT = 100
-WIDTH_EMPTY_DEFAULT = 5
+WIDTH_EMPTY_DEFAULT = 20
 START_FIRST_AXIS = 0
 START_SECOND_AXIS = 20
 START_THIRD_AXIS = START_SECOND_AXIS + WIDTH_KEY_DEFAULT + WIDTH_EMPTY_DEFAULT
 WIDTH_KEY_AND_EMPTY = WIDTH_KEY_DEFAULT + WIDTH_EMPTY_DEFAULT
 DEFAULT_END_AXIS = 9 * WIDTH_KEY_AND_EMPTY + WIDTH_KEY_DEFAULT
-NUM_ITERATION = 1
+NUM_ITERATION = 2
+PERMUTATION_LIST = [[], [], []]
 
 class Node:
     def __init__(self, alphabet, x): # alphabet, center x-coordinate,
@@ -20,7 +21,9 @@ class Node:
         self.width = WIDTH_KEY_DEFAULT
         self.normalized_left = WIDTH_EMPTY_DEFAULT/2
         self.normalized_right = WIDTH_EMPTY_DEFAULT/2
-        
+    
+    def __str__(self):
+        return "%s:%s" % (self.alphabet, self.weight)
     def getAlphabet(self):
         return self.alphabet
 
@@ -92,6 +95,7 @@ class Layer:
             l_and_r = node.get_N_left_right()
             if((max(0, node.getX() - l_and_r[0]) <= (int)(data_list[i][1])) and ((int)(data_list[i][1]) <= min(node.getX() + WIDTH_KEY_DEFAULT + l_and_r[1], DEFAULT_END_AXIS))):
                 num = num + 1
+   
         return num
     
     def get_node(self, char): # get node from the alphabet. 'a' -> get node a
@@ -103,14 +107,15 @@ class Layer:
         max_fitness = self.calculateFitness(data_list)
         for i in range(len(self.nodeList)): # original weight is assumed to be maximum, at first.
             self.nodeList[i].max_weight = self.nodeList[i].original_weight
-        permutation_list = []
-        for i in range(len(self.nodeList)): # to search all the neighborhoods, make permutation
-            permutation_list.append([-1, 0, 1])
-        permutation_list = make_permutation(permutation_list)
-        for i in range(len(permutation_list)):
+        
+        if(len(PERMUTATION_LIST[self.layer]) == 0):
+            for i in range(len(self.nodeList)): # to search all the neighborhoods, make permutation
+                PERMUTATION_LIST[self.layer].append([-1, 0, 1])
+            PERMUTATION_LIST[self.layer] = make_permutation(PERMUTATION_LIST[self.layer])
+        for i in range(len(PERMUTATION_LIST[self.layer])):
             end = 0
             for j in range(len(self.nodeList)):
-                self.nodeList[j].weight = self.nodeList[j].original_weight + permutation_list[i][j]
+                self.nodeList[j].weight = self.nodeList[j].original_weight + PERMUTATION_LIST[self.layer][i][j]
                 if(self.nodeList[j].weight < 0 or self.nodeList[j].weight > 10):
                     end = 1
                     break
@@ -118,6 +123,9 @@ class Layer:
                 continue
             self.normalize() # apply the weight to change the space in between nodes
             new_fitness = self.calculateFitness(data_list)
+            #print(new_fitness, max_fitness)
+            #if(new_fitness != max_fitness):
+                #print(new_fitness, max_fitness)
             if(new_fitness >= max_fitness):
                 for k in range(len(self.nodeList)):
                     self.nodeList[k].max_weight = self.nodeList[k].weight
@@ -133,6 +141,15 @@ class Keyboard:
         self.layerList = []
         self.user = user
 
+    def __str__(self):
+        str_keyboard = ""
+        for i in range(3):
+            for elem in self.getLayer(i).nodeList:
+                str_keyboard += str(elem)
+                str_keyboard += " "
+            str_keyboard += "\n"
+        return str_keyboard
+    
     def initialize(self):
         layer_0 = Layer(0)
         layer_0.initialize()
@@ -204,7 +221,7 @@ def make_permutation(permutation_list): # to explore all the neighborhoods, we n
     
 if __name__ == '__main__':
     # parse data from input
-    file_name = "input.txt"
+    file_name = "example.txt"
     data_list = parse_data(file_name)
     
     # make Keyboard
@@ -217,3 +234,4 @@ if __name__ == '__main__':
     # TODO make search problem
     for i in range(NUM_ITERATION):
         keyboard.explore_neighborhood(data_list)
+    print(keyboard)
