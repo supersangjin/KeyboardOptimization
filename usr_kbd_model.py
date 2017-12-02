@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from scipy import optimize
 import pandas as pd
 import numpy as np
+from string import ascii_letters
 
 Params = namedtuple("Params", ["h", "mean", "std"])
 
@@ -23,18 +24,47 @@ class KBDModel(object):
 			# is rather fast
 			pass
 
+	def parse_file(self, file_name):
+		try:
+			with open(file_name, "r+") as f:
+				lines = f.readlines()
+				f.seek(0)
+				f.truncate()
+				for line in lines:
+					# we don't need the message line in the csv file
+					if line.split(",")[0] == "Message":
+						continue
+					# if line has a coma at the end delete it, since in
+					# this case it would mean a badly formated csv. Remove
+					# trailing spaces, carriage return or line feeds for
+					# easier comparison
+					line = line.rstrip("\n\r ")
+					if line[-1] == ',':
+						# I'm writing the lines using *nix style with only a
+						# line feed... sorry! Screw Windows and its
+						# carriage return!
+						line = line[:-1] + "\n"
+					f.write(line)
+		except Exception as e:
+			raise e
+
 	def read_values(self, keystrokes_file):
 		"""Read and filter values from csv file"""
 		try:
+			self.parse_file(keystrokes_file)
 			# header = None -> first row is not to be taken as the column names
 			df = pd.read_csv(keystrokes_file, header=None, names=["letter", "x_pos"])
-			# filter unused values and the "Message" itself, since we are
-			# only interested in the letters / positions
-			df = df[(df["letter"] != "Message") & (df["letter"] != " ") & (df["letter"] != "?")]
+			# drop rows without a value
+			df = df.dropna()
+			# drop all rows that do not have a single letter in the
+			# "letter" column
+			df = df[df["letter"].isin(list(ascii_letters))]
 			# values can also have noise; Remove it
 			df = df[df["x_pos"] != "?"]
+			# because of noise values might have not been read as floats,
+			# so we explicitly tranform them
 			df["x_pos"] = df["x_pos"].astype(float)
-			# store thevalues in case we need them for sth
+			# store the values in case we need them for sth
 			self.raw_values = df
 		except Exception:
 			raise
