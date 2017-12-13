@@ -40,11 +40,15 @@ class KBDModel(object):
 					# easier comparison
 					line = line.rstrip("\n\r ")
 					if line[-1] == ',':
-						# I'm writing the lines using *nix style with only a
-						# line feed... sorry! Screw Windows and its
-						# carriage return!
-						line = line[:-1] + "\n"
+						# I'm writing the lines using *nix style with only
+						# a line feed... sorry! Screw Windows and its
+						# carriage return! EDIT: Apparently things break if
+						# not WIindows style... whatever, then, Windows it
+						# will be
+						line = line[:-1]
+					line += "\r\n"
 					f.write(line)
+		# except FileNotFoundError:
 		except Exception as e:
 			raise e
 
