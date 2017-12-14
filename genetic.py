@@ -10,8 +10,9 @@ alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n"
 layer_1 = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"]
 layer_2 = ["a", "s", "d", "f", "g", "h", "j", "k", "l"]
 layer_3 = ["z", "x", "c", "v", "b", "n", "m"]
-SAMPLE_NUM = 10000
-TEST_NUM = 1000000
+SAMPLE_NUM = 5000
+TEST_NUM = 1000
+GENERATION_NUM = 100
 
 # User Keyboard Model
 user_model = usr_kbd_model.KBDModel("output.csv")
@@ -83,7 +84,7 @@ toolbox.register("mate", tools.cxTwoPoint)
 
 # register a mutation operator with a probability to
 # mutate each attribute/gene of 0.05
-toolbox.register("mutate", tools.mutGaussian, mu=0.0, sigma=0.02, indpb=0.05)
+toolbox.register("mutate", tools.mutGaussian, mu=0.0, sigma=0.02, indpb=0.2)
 
 # operator for selecting individuals for breeding the next
 # generation: each individual of the current generation
@@ -98,9 +99,9 @@ def main():
     random.seed(64)
 
     # create an initial population of 100 individuals each for layer
-    pop_1 = toolbox.population_1(n=50)
-    pop_2 = toolbox.population_2(n=50)
-    pop_3 = toolbox.population_3(n=50)
+    pop_1 = toolbox.population_1(n=40)
+    pop_2 = toolbox.population_2(n=40)
+    pop_3 = toolbox.population_3(n=40)
 
     # CXPB  is the probability with which two individuals
     #       are crossed
@@ -133,7 +134,7 @@ def main():
     g = 0
 
     # Begin the evolution
-    while g < 50:
+    while g < GENERATION_NUM:
         # A new generation
         g = g + 1
         print("-- Generation %i --" % g)
@@ -334,6 +335,17 @@ def main():
                     total_correct += 1
 
     print("\nOut of " + str(TEST_NUM) + " user inputs " + str(TEST_NUM - total_correct) + " typos")
+    print(str((TEST_NUM - total_correct) * 100 / float(TEST_NUM)) + " % typos")
+
+    # Write keyboard layout to output file
+    f = open('genetic_keyboard_kaz.txt', 'w')
+    for i in best_ind_1:
+        f.write(str(i)+"\n")
+    for i in best_ind_2:
+        f.write(str(i)+"\n")
+    for i in best_ind_3:
+        f.write(str(i)+"\n")
+    f.close()
 
 
 if __name__ == "__main__":
