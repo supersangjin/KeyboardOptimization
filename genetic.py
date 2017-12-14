@@ -338,7 +338,7 @@ def main():
     print(str((TEST_NUM - total_correct) * 100 / float(TEST_NUM)) + " % typos")
 
     # Write keyboard layout to output file
-    f = open('genetic_keyboard_kaz.txt', 'w')
+    f = open('genetic_keyboard_jm.txt', 'w')
     for i in best_ind_1:
         f.write(str(i)+"\n")
     for i in best_ind_2:

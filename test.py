@@ -6,7 +6,7 @@ alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n"
 layer_1 = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"]
 layer_2 = ["a", "s", "d", "f", "g", "h", "j", "k", "l"]
 layer_3 = ["z", "x", "c", "v", "b", "n", "m"]
-TEST_NUM = 10000000
+TEST_NUM = 100000
 
 keyboard_layer_1 = []
 keyboard_layer_2 = []
@@ -28,7 +28,7 @@ def test(keyboard_file):
         n += 1
 
     # User Keyboard Model
-    user_model = usr_kbd_model.KBDModel("output.csv")
+    user_model = usr_kbd_model.KBDModel("output_kaz.csv")
 
     print("\nKeyboard Layout\n")
     print(keyboard_layer_1)
