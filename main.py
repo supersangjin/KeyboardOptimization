@@ -1,15 +1,18 @@
-import getopt # get input data
+import random
+import usr_kbd_model
 
-
-WIDTH_KEY_DEFAULT = 0.084745762711864407
-WIDTH_EMPTY_DEFAULT = 0.0169491525423728813559
-START_FIRST_AXIS = 0.0
-START_SECOND_AXIS = 0.016949152542372881
-START_THIRD_AXIS = START_SECOND_AXIS + WIDTH_KEY_DEFAULT + WIDTH_EMPTY_DEFAULT
+WIDTH_KEY_DEFAULT = 0.05
+WIDTH_EMPTY_DEFAULT = 0.0555555556
+START_FIRST_AXIS = 0.00952
+START_SECOND_AXIS = 0.0571428
+START_THIRD_AXIS = 0.158730158
 WIDTH_KEY_AND_EMPTY = WIDTH_KEY_DEFAULT + WIDTH_EMPTY_DEFAULT
 DEFAULT_END_AXIS = 9 * WIDTH_KEY_AND_EMPTY + WIDTH_KEY_DEFAULT
-NUM_ITERATION = 2
+NUM_ITERATION = 10
 PERMUTATION_LIST = [[], [], []]
+alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+SAMPLE_ITERATION = 100000
+
 
 class Node:
     def __init__(self, alphabet, x): # alphabet, center x-coordinate,
@@ -19,11 +22,13 @@ class Node:
         self.weight = 0 # 0 ~ 10
         self.max_weight = 0 # 0 ~ 10
         self.width = WIDTH_KEY_DEFAULT
-        self.normalized_left = WIDTH_EMPTY_DEFAULT/2
-        self.normalized_right = WIDTH_EMPTY_DEFAULT/2
+        self.normalized_left = WIDTH_EMPTY_DEFAULT/2.0
+        self.normalized_right = WIDTH_EMPTY_DEFAULT/2.0
     
     def __str__(self):
         return "%s:%s" % (self.alphabet, self.weight)
+
+
     def getAlphabet(self):
         return self.alphabet
 
@@ -93,7 +98,7 @@ class Layer:
         for i in range(len(data_list)):
             node = self.get_node(data_list[i][0])
             l_and_r = node.get_N_left_right()
-            if((max(0, node.getX() - l_and_r[0]) <= (int)(data_list[i][1])) and ((int)(data_list[i][1]) <= min(node.getX() + WIDTH_KEY_DEFAULT + l_and_r[1], DEFAULT_END_AXIS))):
+            if((max(0, node.getX() - l_and_r[0]) <= (float)(data_list[i][1])) and ((float)(data_list[i][1]) <= min(node.getX() + WIDTH_KEY_DEFAULT + l_and_r[1], DEFAULT_END_AXIS))):
                 num = num + 1
    
         return num
@@ -125,7 +130,7 @@ class Layer:
             new_fitness = self.calculateFitness(data_list)
             #print(new_fitness, max_fitness)
             #if(new_fitness != max_fitness):
-                #print(new_fitness, max_fitness)
+            #    print(new_fitness, max_fitness)
             if(new_fitness >= max_fitness):
                 for k in range(len(self.nodeList)):
                     self.nodeList[k].max_weight = self.nodeList[k].weight
@@ -221,17 +226,33 @@ def make_permutation(permutation_list): # to explore all the neighborhoods, we n
     
 if __name__ == '__main__':
     # parse data from input
-    file_name = "output.csv"
-    data_list = parse_data(file_name)
+    #file_name = "example.txt"
+    #data_list = parse_data(file_name)
+
+    user_model = usr_kbd_model.KBDModel("output.csv")
+
+    data_list = []
+    for i in range(SAMPLE_ITERATION):
+        rand = random.randint(0, 25)
+        sample = user_model.get_keystroke(alphabet[rand])
+        data_list.append([alphabet[rand], sample])
     
     # make Keyboard
     keyboard = Keyboard('user')
     keyboard.initialize()
 
-    # seperate data to each layer
-    data_list = keyboard.seperate_data(data_list)
-    
+    before = keyboard.calculateFitness(data_list)
     # TODO make search problem
     for i in range(NUM_ITERATION):
+        data_list = []
+        for j in range(SAMPLE_ITERATION):
+            rand = random.randint(0, 25)
+            sample = user_model.get_keystroke(alphabet[rand])
+            data_list.append([alphabet[rand], str(sample)])
+        # seperate data to each layer
+        data_list = keyboard.seperate_data(data_list)
         keyboard.explore_neighborhood(data_list)
-    print(keyboard)
+        print(str(NUM_ITERATION) + "th iteration " + str(sum(keyboard.calculateFitness(data_list))))
+        print(keyboard)
+    print("Before : " + str(sum(before)))
+    print("After : " + str(sum(keyboard.calculateFitness(data_list))))
