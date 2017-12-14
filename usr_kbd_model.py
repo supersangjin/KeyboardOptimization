@@ -71,6 +71,8 @@ class KBDModel(object):
             df["x_pos"] = df["x_pos"].astype(float)
             # store the values in case we need them for sth
             self.raw_values = df
+        except TypeError:
+            pass
         except Exception:
             raise
 
