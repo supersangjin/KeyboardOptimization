@@ -11,6 +11,12 @@ import java.util.Set;
 import org.w3c.dom.Text;
 
 public class ReaderWriter {
+	/**
+	 * Reads lines of text to send to the client.
+	 * @param fileName
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	public static String[] readstringsFromFile(String fileName) throws FileNotFoundException {
 		Scanner scan = new Scanner(new File(fileName));
 		ArrayList<String> linesList = new ArrayList<String>();
@@ -25,6 +31,11 @@ public class ReaderWriter {
 		return linesArr;
 	}
 
+	/**
+	 * Appends the received message and coordinate from the server to the OUTPUT_FILE.
+	 * @param message
+	 * @throws IOException
+	 */
 	public static void writeToFile(String message) throws IOException {
 		String[] texts = message.split("_");
 		

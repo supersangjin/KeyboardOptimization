@@ -26,9 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
     private TcpClient mTcpClient;
 
-    static Socket clientSocket;
-    static PrintWriter outToServer;
-
     ArrayList<String> linesToType = new ArrayList<String>();
     ArrayList<String> touchedPoints = new ArrayList<String>();
 
@@ -46,14 +43,6 @@ public class MainActivity extends AppCompatActivity {
                 String serverIp = ip.getText().toString();
                 TcpClient.serverIp = serverIp;
                 new ConnectTask().execute("");
-
-
-                // Hides keyboard
-                /*LinearLayout mainLayout = (LinearLayout)findViewById(R.id.list_item);
-
-                // Then just use the following:
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);*/
             }
         });
 
@@ -78,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         textView.setText(linesToType.get(0));
                     }
+                }
+                else if(linesToType.size() > 0 && textView.getText().toString().equals("")) {
+                    textView.setText(linesToType.get(0));
                 }
             }
         });
@@ -107,8 +99,6 @@ public class MainActivity extends AppCompatActivity {
             double xDim = x / ((double) screenWidth);
 
             touchedPoints.add(String.format ("%.6f", xDim));
-
-            //outToServer.write(5);
         }
         return false;
     }
@@ -145,11 +135,6 @@ public class MainActivity extends AppCompatActivity {
                     //this method calls the onProgressUpdate
                     publishProgress(message);
                     linesToType.add(message);
-                    /*TextView textView = (TextView) findViewById(R.id.editText2);
-                    if(textView.getText().toString().equals("") && linesToType.size() > 0) {
-                        textView.setText(linesToType.get(0));
-                        Button nextTextButton = (Button) findViewById(R.id.nextTextButton);
-                    }*/
                 }
             });
             mTcpClient.run();
@@ -160,12 +145,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
-
-            //in the arrayList we add the messaged received from server
-            //arrayList.add(values[0]);
-            // notify the adapter that the data set has changed. This means that new message received
-            // from server was added to the list
-            //mAdapter.notifyDataSetChanged();
         }
     }
 
