@@ -1,7 +1,6 @@
 import random
 import usr_kbd_model
 
-
 WIDTH_KEY_DEFAULT = 0.05
 WIDTH_EMPTY_DEFAULT = 0.0555555556
 START_FIRST_AXIS = 0.00952

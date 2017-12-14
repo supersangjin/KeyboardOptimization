@@ -10,15 +10,10 @@ public class TcpClient {
 
     public static String serverIp = ""; //your computer IP address
     public static final int SERVER_PORT = 4444;
-    // message to send to the server
     private String mServerMessage;
-    // sends message received notifications
     private OnMessageReceived mMessageListener = null;
-    // while this is true, the server will continue running
     private boolean mRun = false;
-    // used to send messages
     private PrintWriter mBufferOut;
-    // used to read messages from the server
     private BufferedReader mBufferIn;
 
     /**
@@ -29,7 +24,7 @@ public class TcpClient {
     }
 
     /**
-     * Sends the message entered by client to the server
+     * Sends the message entered by the client to the server
      *
      * @param message text entered by client
      */
@@ -40,33 +35,11 @@ public class TcpClient {
         }
     }
 
-    /**
-     * Close the connection and release the members
-     */
-    public void stopClient() {
-
-        // send mesage that we are closing the connection
-        sendMessage(Constants.CLOSED_CONNECTION+"Kazy");
-
-        mRun = false;
-
-        if (mBufferOut != null) {
-            mBufferOut.flush();
-            mBufferOut.close();
-        }
-
-        mMessageListener = null;
-        mBufferIn = null;
-        mBufferOut = null;
-        mServerMessage = null;
-    }
-
     public void run() {
 
         mRun = true;
 
         try {
-            //here you must put your computer's IP address.
             InetAddress serverAddr = InetAddress.getByName(serverIp);
 
             Log.e("TCP Client", "C: Connecting...");
@@ -96,11 +69,11 @@ public class TcpClient {
 
                 }
 
-                Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + mServerMessage + "'");
+                Log.e("RESPONSE FROM SERVER", "Received Message: '" + mServerMessage + "'");
 
             } catch (Exception e) {
 
-                Log.e("TCP", "S: Error", e);
+                Log.e("TCP", "Error", e);
 
             } finally {
                 //the socket must be closed. It is not possible to reconnect to this socket
@@ -110,14 +83,12 @@ public class TcpClient {
 
         } catch (Exception e) {
 
-            Log.e("TCP", "C: Error", e);
+            Log.e("TCP", "Error", e);
 
         }
 
     }
 
-    //Declare the interface. The method messageReceived(String message) will must be implemented in the MyActivity
-    //class at on asynckTask doInBackground
     public interface OnMessageReceived {
         public void messageReceived(String message);
     }
