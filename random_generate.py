@@ -9,8 +9,8 @@ WIDTH_KEY_AND_EMPTY = WIDTH_KEY_DEFAULT + WIDTH_EMPTY_DEFAULT
 DEFAULT_END_AXIS = 9 * WIDTH_KEY_AND_EMPTY + WIDTH_KEY_DEFAULT
 NUM_ITERATION = 100000
 
-output = open("example.txt", "w")
+output = open("example.csv", "w")
 
 alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 for i in range(NUM_ITERATION):
-    output.write(("%s %s\n") % (alphabet[random.randint(-1,25)], random.randint(START_FIRST_AXIS - 1, DEFAULT_END_AXIS))) 
+    output.write(("%s,%s\n") % (alphabet[random.randint(0,len(alphabet)-1)], random.random())) 

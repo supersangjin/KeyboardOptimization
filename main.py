@@ -1,10 +1,10 @@
 import getopt # get input data
 
 
-WIDTH_KEY_DEFAULT = 100
-WIDTH_EMPTY_DEFAULT = 20
-START_FIRST_AXIS = 0
-START_SECOND_AXIS = 20
+WIDTH_KEY_DEFAULT = 0.084745762711864407
+WIDTH_EMPTY_DEFAULT = 0.0169491525423728813559
+START_FIRST_AXIS = 0.0
+START_SECOND_AXIS = 0.016949152542372881
 START_THIRD_AXIS = START_SECOND_AXIS + WIDTH_KEY_DEFAULT + WIDTH_EMPTY_DEFAULT
 WIDTH_KEY_AND_EMPTY = WIDTH_KEY_DEFAULT + WIDTH_EMPTY_DEFAULT
 DEFAULT_END_AXIS = 9 * WIDTH_KEY_AND_EMPTY + WIDTH_KEY_DEFAULT
@@ -221,7 +221,7 @@ def make_permutation(permutation_list): # to explore all the neighborhoods, we n
     
 if __name__ == '__main__':
     # parse data from input
-    file_name = "example.txt"
+    file_name = "output.csv"
     data_list = parse_data(file_name)
     
     # make Keyboard
