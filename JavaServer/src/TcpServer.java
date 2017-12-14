@@ -108,7 +108,7 @@ public class TcpServer extends Thread {
         try {
         	String ip = InetAddress.getLocalHost().toString();
         	
-        	System.out.println("IP: " + ip);
+        	messageListener.messageReceived("IP: " + ip);
         	
             System.out.println("Pending connection");
  
