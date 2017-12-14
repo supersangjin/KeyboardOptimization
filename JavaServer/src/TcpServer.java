@@ -1,33 +1,20 @@
 import javax.swing.*;
 import java.io.*;
-import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Enumeration;
-import java.net.NetworkInterface;
  
-/**
- * The class extends the Thread class so we can receive and send messages at the same time
- *
- * @author Catalin Prata
- *         Date: 2/12/13
- */
 public class TcpServer extends Thread {
  
     public static final int SERVERPORT = 4444;
-    // while this is true the server will run
     private boolean running = false;
-    // used to send messages
     private PrintWriter bufferSender;
-    // callback used to notify new messages received
     private OnMessageReceived messageListener;
     private ServerSocket serverSocket;
     private Socket client;
  
     /**
-     * Constructor of the class
+     * Constructor
      *
      * @param messageListener listens for the messages
      */
@@ -36,13 +23,10 @@ public class TcpServer extends Thread {
     }
  
     public static void main(String[] args) {
- 
-        //opens the window where the messages will be received and sent
         MainScreen frame = new MainScreen();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
- 
     }
  
     /**
@@ -65,14 +49,14 @@ public class TcpServer extends Thread {
             e.printStackTrace();
         }
  
-        System.out.println("S: Done.");
+        System.out.println("Done");
         serverSocket = null;
         client = null;
  
     }
  
     /**
-     * Method to send the messages from server to client
+     * Sends the messages to the client
      *
      * @param message the message sent by the server
      */
@@ -80,13 +64,13 @@ public class TcpServer extends Thread {
         if (bufferSender != null && !bufferSender.checkError()) {
         	for(int i = 0; i < messages.length; i++) {
         		bufferSender.println(messages[i]);
+        		bufferSender.flush();
         	}
-            bufferSender.flush();
         }
     }
     
     /**
-     * Method to send the messages from server to client
+     * Sends the message to the client
      *
      * @param message the message sent by the server
      */
@@ -97,16 +81,17 @@ public class TcpServer extends Thread {
         }
     }
  
-    public boolean hasCommand(String message) {
+    /**
+     * When an initial greeting message is received from the client, this method returns true.
+     * This is to indicate when a device has just connected to the server.
+     * @param message
+     * @return
+     */
+    public boolean deviceConnected(String message) {
         if (message != null) {
-            if (message.contains(Constants.CLOSED_CONNECTION)) {
-                messageListener.messageReceived("Disconnected");
-                // close the server connection if we have this command and rebuild a new one
-                close();
-                runServer();
-                return true;
-            } else if (message.contains(Constants.LOGIN_NAME)) {
+            if (message.contains(Constants.LOGIN_NAME)) {
                 messageListener.messageReceived("Device connected!");
+                
                 return true;
             }
         }
@@ -121,11 +106,11 @@ public class TcpServer extends Thread {
         running = true;
  
         try {
-        	String ip = getLocalHostLANAddress().toString();
+        	String ip = InetAddress.getLocalHost().toString();
         	
-        	 messageListener.messageReceived("IP: " + ip);
+        	System.out.println("IP: " + ip);
         	
-            System.out.println("S: Connecting...");
+            System.out.println("Pending connection");
  
             //create a server socket. A server socket waits for requests to come in over the network.
             serverSocket = new ServerSocket(SERVERPORT);
@@ -133,18 +118,17 @@ public class TcpServer extends Thread {
             //create client socket... the method accept() listens for a connection to be made to this socket and accepts it.
             client = serverSocket.accept();
  
-            System.out.println("S: Receiving...");
+            System.out.println("Receiving Data");
  
             try {
  
-                //sends the message to the client
+                // Used to send messages to the client
                 bufferSender = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())), true);
  
-                //read the message received from client
+                // Used to read messages from the client
                 BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
  
-                //in this while we wait to receive messages from client (it's an infinite loop)
-                //this while it's like a listener for messages
+                // This loop listens to new messages
                 while (running) {
  
                     String message = null;
@@ -154,23 +138,23 @@ public class TcpServer extends Thread {
                         System.out.println("Error reading message: " + e.getMessage());
                     }
  
-                    if (hasCommand(message)) {
+                    // If a device just connected, nothing further is done.
+                    if (deviceConnected(message)) {
                         continue;
                     }
  
                     if (message != null && messageListener != null) {
-                        //call the method messageReceived from ServerBoard class
                         messageListener.messageReceived(message);
                     }
                 }
  
             } catch (Exception e) {
-                System.out.println("S: Error");
+                System.out.println("Error");
                 e.printStackTrace();
             }
  
         } catch (Exception e) {
-            System.out.println("S: Error");
+            System.out.println("Error");
             e.printStackTrace();
         }
     }
@@ -182,69 +166,9 @@ public class TcpServer extends Thread {
         runServer();
  
     }
- 
-    //Declare the interface. The method messageReceived(String message) will must be implemented in the ServerBoard
-    //class at on startServer button click
+    
     public interface OnMessageReceived {
         public void messageReceived(String message);
     }
  
-    private static InetAddress getLocalHostLANAddress() throws UnknownHostException
-    {
-        try
-        {
-            InetAddress candidateAddress = null;
-            // Iterate all NICs (network interface cards)...
-            for (Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements();)
-            {
-                NetworkInterface iface = (NetworkInterface) ifaces.nextElement();
-                // Iterate all IP addresses assigned to each card...
-                for (Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements();)
-                {
-                    InetAddress inetAddr = (InetAddress) inetAddrs.nextElement();
-                    if (!inetAddr.isLoopbackAddress())
-                    {
-                    	if (inetAddr instanceof Inet6Address) continue;
-                        if (inetAddr.isSiteLocalAddress())
-                        {
-                            // Found non-loopback site-local address. Return it immediately...
-                            return inetAddr;
-                        }
-                        else if (candidateAddress == null)
-                        {
-                            // Found non-loopback address, but not necessarily site-local.
-                            // Store it as a candidate to be returned if site-local address is not subsequently found...
-                            candidateAddress = inetAddr;
-                            // Note that we don't repeatedly assign non-loopback non-site-local addresses as candidates,
-                            // only the first. For subsequent iterations, candidate will be non-null.
-                        }
-                    }
-                }
-            }
-            if (candidateAddress != null)
-            {
-                // We did not find a site-local address, but we found some other non-loopback address.
-                // Server might have a non-site-local address assigned to its NIC (or it might be running
-                // IPv6 which deprecates the "site-local" concept).
-                // Return this non-loopback candidate address...
-                return candidateAddress;
-            }
-            // At this point, we did not find a non-loopback address.
-            // Fall back to returning whatever InetAddress.getLocalHost() returns...
-            InetAddress jdkSuppliedAddress = InetAddress.getLocalHost();
-            if (jdkSuppliedAddress == null) {
-                throw new UnknownHostException("The JDK InetAddress.getLocalHost() method unexpectedly returned null.");
-            }
-            return jdkSuppliedAddress;
-        }
-        catch (Exception e)
-        {
-            UnknownHostException unknownHostException = new UnknownHostException("Failed to determine LAN address: " + e);
-            unknownHostException.initCause(e);
-            throw unknownHostException;
-        }
-    }
-
-    
 }
-
