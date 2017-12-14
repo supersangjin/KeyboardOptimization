@@ -1,5 +1,6 @@
 import sys
 import random
+import argparse
 import usr_kbd_model
 
 alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
@@ -13,8 +14,8 @@ keyboard_layer_2 = []
 keyboard_layer_3 = []
 
 
-def test(keyboard_file):
-    file = open(keyboard_file, 'r')
+def test(args):
+    file = open(args.keyboard_file, 'r')
     keyboard_list = file.readlines()
     file.close()
     n = 0
@@ -28,7 +29,7 @@ def test(keyboard_file):
         n += 1
 
     # User Keyboard Model
-    user_model = usr_kbd_model.KBDModel("output.csv")
+    user_model = usr_kbd_model.KBDModel(args.data_file)
 
     print("\nKeyboard Layout\n")
     print(keyboard_layer_1)
@@ -79,16 +80,42 @@ def test(keyboard_file):
     print(str((TEST_NUM - total_correct)*100/float(TEST_NUM)) + " % typos")
 
 
-def main():
-    if len(sys.argv) != 2:
-        sys.stderr.write("Usage : python3 test.py keyboard.txt\n")
-        sys.exit(9)
-    file = sys.argv[1]
-    if not file.endswith(".txt"):
-        sys.stderr.write("input file should be .txt\n")
-        sys.exit(9)
-    test(file)
+def main(args):
+    # if len(sys.argv) != 2:
+    #     sys.stderr.write("Usage : python3 test.py keyboard.txt\n")
+    #     sys.exit(9)
+    # file = sys.argv[1]
+    # if not file.endswith(".txt"):
+    #     sys.stderr.write("input file should be .txt\n")
+    #     sys.exit(9)
+    test(args)
 
 
 if __name__ == "__main__":
-    main()
+    if sys.version_info[0] is not 3:
+        print("ERROR: Please use Python version 3. (Your version: {0})".format(sys.version))
+        exit(1)
+
+    description = ("Test keyboard accuracy")
+
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument("keyboard_file",
+                        type=str,
+                        default="keyboard.txt",
+                        help="File containing the to-test keyboard")
+    parser.add_argument("-f",
+                        "--data-file",
+                        type=str,
+                        help="File from which to read test data",
+                        default="output.csv")
+    parser.add_argument("-v",
+                        "--verbose",
+                        help="Print information about the program results",
+                        action="store_true")
+    parser.add_argument("-d",
+                        "--debug",
+                        help="Print information about the program execution (Has temporarily no effect)",
+                        action="store_true")
+    args = parser.parse_args()
+
+    main(args)
