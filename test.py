@@ -101,13 +101,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("keyboard_file",
                         type=str,
-                        default="keyboard.txt",
+                        default="original_keyboard.txt",
                         help="File containing the to-test keyboard")
     parser.add_argument("-f",
                         "--data-file",
                         type=str,
                         help="File from which to read test data",
-                        default="output.csv")
+                        default="output_sj.csv")
     parser.add_argument("-v",
                         "--verbose",
                         help="Print information about the program results",
