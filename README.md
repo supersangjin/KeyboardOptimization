@@ -2,19 +2,23 @@
 
 Every user has a unique typing pattern that comes along a set of personal common typing errors. By analysing this pattern, a personalized keyboard is generated - decreasing the number of personal type errors. The intention is to optimize the touch space that each key should occupy to reduce typos.
 
+### Requirements
+```
+$ pip install deap
+```
 
 ### Update 15.12.2017
 
 Find the optimal keyboard touchspace with genetic algorithm
 
-```python
-python3 genetic.py [-h] [-o OUT] [-p POP_SIZE] [-n NUM_GENERATIONS]
-                   [-t TOURNAMENT_SIZE] [-v] [-d]
-                   data_file
+```
+$ python3 genetic.py [-h] [-o OUT] [-p POP_SIZE] [-n NUM_GENERATIONS]
+                     [-t TOURNAMENT_SIZE] [-v] [-d]
+                     data_file
 ```
 ```
 positional arguments:
-  data_file             File with the training data. default=output.csv
+  data_file             File with the training data. default=output_sj.csv
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -26,19 +30,40 @@ optional arguments:
                         Number of iterations of the algorithm. default=100
   -t TOURNAMENT_SIZE, --tournament-size TOURNAMENT_SIZE
                         number of individuals to select for the tournament
-                        selection process
+                        selection process. default=3
   -v, --verbose         Print information about the program results
   -d, --debug           Print information about the program execution (Has
                         temporarily no effect)
 ```
 
-### Update 13.12.2017
+
+Test keyboard accuracy created by genetic algorithm
+```
+$ python3 test.py [-h] [-f DATA_FILE] [-v] [-d]
+                  keyboard_file
+```
+```
+positional arguments:
+  keyboard_file         File containing the to-test keyboard. default=keyboard.txt
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f DATA_FILE, --data-file DATA_FILE
+                        File from which to read test data. default=output_sj.csv
+  -v, --verbose         Print information about the program results
+  -d, --debug           Print information about the program execution (Has
+                        temporarily no effect)
+```
+
+
 
 Find the optimal keyboard touchspace with local search algorithm
 
-```python
-python3 local_search.py
 ```
+$ python3 local_search.py
+```
+
+
 
 
 ### Update 01.12.2017
