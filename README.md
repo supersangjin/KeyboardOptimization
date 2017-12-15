@@ -4,12 +4,12 @@ Every user has a unique typing pattern that comes along a set of personal common
 
 ### Requirements
 ```
-$ pip install deap
+$ pip install deap numpy pandas scipy
 ```
 
 ### Update 15.12.2017
 
-Find the optimal keyboard touchspace with genetic algorithm
+Find the optimal keyboard touchspace using genetic algorithm
 
 ```
 $ python3 genetic.py [-h] [-o OUT] [-p POP_SIZE] [-n NUM_GENERATIONS]
