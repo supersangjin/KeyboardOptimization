@@ -7,10 +7,8 @@ Every user has a unique typing pattern that comes along a set of personal common
 genetic.py usage:
 
 ```python
-python3 genetic.py [-h] [-o OUT] [-p POP_SIZE] [-n NUM_GENERATIONS]
-                  [-t TOURNAMENT_SIZE] [-v] [-d]
-                  data_file
-
+python3 genetic.py data_file [-h] [-o OUT] [-p POP_SIZE] [-n NUM_GENERATIONS] [-t TOURNAMENT_SIZE] [-v] [-d]               
+```
 positional arguments:
   data_file             File with the training data. default=output.csv
 
@@ -28,7 +26,6 @@ optional arguments:
   -v, --verbose         Print information about the program results
   -d, --debug           Print information about the program execution (Has
                         temporarily no effect)
-```
 
 
 # Update 01.12.2017
