@@ -11,7 +11,7 @@ $ pip install deap
 
 Find the optimal keyboard touchspace with genetic algorithm
 
-```python
+```
 $ python3 genetic.py [-h] [-o OUT] [-p POP_SIZE] [-n NUM_GENERATIONS]
                      [-t TOURNAMENT_SIZE] [-v] [-d]
                      data_file
@@ -38,7 +38,7 @@ optional arguments:
 
 
 Test keyboard accuracy created by genetic algorithm
-```python
+```
 $ python3 test.py [-h] [-f DATA_FILE] [-v] [-d]
                   keyboard_file
 ```
@@ -59,8 +59,8 @@ optional arguments:
 
 Find the optimal keyboard touchspace with local search algorithm
 
-```python
-python3 local_search.py
+```
+$ python3 local_search.py
 ```
 
 
