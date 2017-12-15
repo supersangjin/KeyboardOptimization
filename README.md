@@ -44,7 +44,7 @@ $ python3 test.py [-h] [-f DATA_FILE] [-v] [-d]
 ```
 ```
 positional arguments:
-  keyboard_file         File containing the to-test keyboard. default=keyboard_sj.txt
+  keyboard_file         File containing the to-test keyboard. default=keyboard.txt
 
 optional arguments:
   -h, --help            show this help message and exit
