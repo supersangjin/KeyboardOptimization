@@ -32,13 +32,34 @@ optional arguments:
                         temporarily no effect)
 ```
 
-### Update 13.12.2017
+
+Test keyboard accuracy created by genetic algorithm
+```python
+python3 test.py [-h] [-f DATA_FILE] [-v] [-d]
+                keyboard_file
+```
+```
+positional arguments:
+  keyboard_file         File containing the to-test keyboard. default=keyboard.txt
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f DATA_FILE, --data-file DATA_FILE
+                        File from which to read test data. default=output.csv
+  -v, --verbose         Print information about the program results
+  -d, --debug           Print information about the program execution (Has
+                        temporarily no effect)
+```
+
+
 
 Find the optimal keyboard touchspace with local search algorithm
 
 ```python
 python3 local_search.py
 ```
+
+
 
 
 ### Update 01.12.2017
