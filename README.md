@@ -14,7 +14,7 @@ python3 genetic.py [-h] [-o OUT] [-p POP_SIZE] [-n NUM_GENERATIONS]
 ```
 ```
 positional arguments:
-  data_file             File with the training data. default=output.csv
+  data_file             File with the training data. default=output_sj.csv
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -40,12 +40,12 @@ python3 test.py [-h] [-f DATA_FILE] [-v] [-d]
 ```
 ```
 positional arguments:
-  keyboard_file         File containing the to-test keyboard. default=keyboard.txt
+  keyboard_file         File containing the to-test keyboard. default=keyboard_sj.txt
 
 optional arguments:
   -h, --help            show this help message and exit
   -f DATA_FILE, --data-file DATA_FILE
-                        File from which to read test data. default=output.csv
+                        File from which to read test data. default=output_sj.csv
   -v, --verbose         Print information about the program results
   -d, --debug           Print information about the program execution (Has
                         temporarily no effect)
