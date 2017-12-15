@@ -26,7 +26,7 @@ optional arguments:
                         Number of iterations of the algorithm. default=100
   -t TOURNAMENT_SIZE, --tournament-size TOURNAMENT_SIZE
                         number of individuals to select for the tournament
-                        selection process
+                        selection process. default=3
   -v, --verbose         Print information about the program results
   -d, --debug           Print information about the program execution (Has
                         temporarily no effect)
