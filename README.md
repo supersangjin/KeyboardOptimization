@@ -6,10 +6,7 @@ Every user has a unique typing pattern that comes along a set of personal common
 ```
 $ pip install deap
 ```
-or 
-```
-$ easy_install deap
-```
+
 ### Update 15.12.2017
 
 Find the optimal keyboard touchspace with genetic algorithm
