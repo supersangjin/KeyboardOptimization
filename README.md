@@ -3,7 +3,7 @@
 Every user has a unique typing pattern that comes along a set of personal common typing errors. By analysing this pattern, a personalized keyboard is generated - decreasing the number of personal type errors. The intention is to optimize the touch space that each key should occupy to reduce typos.
 
 
-# Update 15.12.2017
+### Update 15.12.2017
 
 Find the optimal keyboard touchspace with genetic algorithm
 
@@ -32,7 +32,14 @@ optional arguments:
                         temporarily no effect)
 ```
 
-# Update 01.12.2017
+### Update 13.12.2017
+
+Find the optimal keyboard touchspace with local search algorithm
+
+```python3 local_search.py```
+
+
+### Update 01.12.2017
 usr_kbd_model module usage:
 
 ```python
