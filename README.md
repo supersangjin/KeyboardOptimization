@@ -36,7 +36,9 @@ optional arguments:
 
 Find the optimal keyboard touchspace with local search algorithm
 
-```python3 local_search.py```
+```python
+python3 local_search.py
+```
 
 
 ### Update 01.12.2017
