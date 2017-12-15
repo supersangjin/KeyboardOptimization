@@ -16,17 +16,16 @@ layer_3 = ["z", "x", "c", "v", "b", "n", "m"]
 SAMPLE_NUM = 5000
 TEST_NUM = 1000
 
+
 def run(args):
     # User Keyboard Model
     user_model = usr_kbd_model.KBDModel(args.data_file)
-
 
     def sample_layer(layer_num):
         sample_li = []
         for i in layer_num:
             sample_li.append(user_model.get_keystroke(i))
         return sample_li
-
 
     creator.create("FitnessMax", base.Fitness, weights=(1.0,))
     creator.create("Individual", list, fitness=creator.FitnessMax)
@@ -53,7 +52,6 @@ def run(args):
     # Layer 3
     toolbox.register("population_3", tools.initRepeat, list, toolbox.individual_3)
 
-
     # the goal ('fitness') function to be maximized
     def fitness(individual, layer_num):
         total_correct = 0
@@ -72,7 +70,6 @@ def run(args):
                 correct += 1
             total_correct += correct
         return total_correct / float(SAMPLE_NUM),
-
 
     # ----------
     # Operator registration
@@ -95,7 +92,7 @@ def run(args):
     # generation: each individual of the current generation
     # is replaced by the 'fittest' (best) of three individuals
     # drawn randomly from the current generation.
-    toolbox.register("select", tools.selTournament, tournsize=3)
+    toolbox.register("select", tools.selTournament, tournsize=args.tournament_size)
     main(args, toolbox, user_model)
 
 
@@ -347,11 +344,11 @@ def main(args, toolbox, user_model):
     # Write keyboard layout to output file
     f = open(args.out, 'w')
     for i in best_ind_1:
-        f.write(str(i)+"\n")
+        f.write(str(i) + "\n")
     for i in best_ind_2:
-        f.write(str(i)+"\n")
+        f.write(str(i) + "\n")
     for i in best_ind_3:
-        f.write(str(i)+"\n")
+        f.write(str(i) + "\n")
     f.close()
 
 
@@ -379,8 +376,9 @@ if __name__ == "__main__":
 
     def type_keyboard(kbd_name):
         counter = 1
+        orig_name = kbd_name
         while kbd_name in os.listdir("."):
-            kbd_name += str(counter)
+            kbd_name = orig_name + str(counter)
             counter += 1
         return kbd_name
 
@@ -414,7 +412,7 @@ if __name__ == "__main__":
                         default=3)
     parser.add_argument("-v",
                         "--verbose",
-                        help="Print information about the program results",
+                        help="Print information about the program results (Has temporarily no effect)",
                         action="store_true")
     parser.add_argument("-d",
                         "--debug",
