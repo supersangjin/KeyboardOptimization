@@ -51,8 +51,8 @@ optional arguments:
   -f DATA_FILE, --data-file DATA_FILE
                         File from which to read test data. default=output_sj.csv
   -v, --verbose         Print information about the program results
-  -d, --debug           Print information about the program execution (Has
-                        temporarily no effect)
+  -d, --debug           Print information about the program execution 
+                        (Has temporarily no effect)
 ```
 
 
