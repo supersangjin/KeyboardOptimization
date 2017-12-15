@@ -1,5 +1,5 @@
 from collections import namedtuple
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from scipy import optimize
 import pandas as pd
 import numpy as np
@@ -9,7 +9,7 @@ Params = namedtuple("Params", ["h", "mean", "std"])
 
 
 class KBDModel(object):
-    """Capture user's behaviour of keybouard use"""
+    """Capture user's behaviour of keyboard usage"""
 
     def __init__(self, input_file, num_bins=100, precalc=False):
         super(KBDModel, self).__init__()
@@ -43,9 +43,9 @@ class KBDModel(object):
                     if line[-1] == ',':
                         # I'm writing the lines using *nix style with only
                         # a line feed... sorry! Screw Windows and its
-                        # carriage return! EDIT: Apparently things break if
-                        # not WIindows style... whatever, then, Windows it
-                        # will be
+                        # carriage return! EDIT: Apparently things break
+                        # for others if not Windows style... whatever
+                        # then, Windows it will be
                         line = line[:-1]
                     line += "\r\n"
                     f.write(line)
@@ -118,6 +118,7 @@ class KBDModel(object):
             # print("optimized\nmu:{0}, sig: {1}".format(params.mean, params.std))
             # lambda resolves namespace when being called, not when
             # assigned, therefore create new scope to get correct params
+            # Might be better solved with partial from functools
             func = lambda x, params=params: np.random.normal(params.mean, params.std, x)
             self.letters_distribution[name] = func
 
