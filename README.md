@@ -2,7 +2,7 @@
 
 Every user has a unique typing pattern that comes along a set of personal common typing errors. By analysing this pattern, a personalized keyboard is generated - decreasing the number of personal type errors. The intention is to optimize the touch space that each key should occupy to reduce typos.
 
-### Installation
+### Requirements
 ```
 $ pip install deap
 ```
